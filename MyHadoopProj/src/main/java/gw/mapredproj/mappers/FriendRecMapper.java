@@ -13,8 +13,8 @@ public class FriendRecMapper
     private Text user = new Text();
     private Text friendValue = new Text();
     @Override
-    public void map(Object key, Text value, Context context
-    ) throws IOException, InterruptedException {
+    public void map(Object key, Text value, Context context)
+            throws IOException, InterruptedException {
         String line = value.toString();
         if (line == null || line.length() == 0) return;
         String[] userAndFriends = line.split("\t");
