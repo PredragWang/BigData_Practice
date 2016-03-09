@@ -22,10 +22,12 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
+        <module name="mapredproj" />
         <module name="wordcount" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="mapredproj" target="1.5" />
       <module name="wordcount" target="1.5" />
     </bytecodeTargetLevel>
   </component>
