@@ -1,5 +1,10 @@
 package gw.utils;
 
+import org.tartarus.snowball.ext.PorterStemmer;
+
+import java.util.LinkedList;
+import java.util.List;
+
 /**
  * Created by Guanyu on 3/10/16.
  */
@@ -7,11 +12,19 @@ public class GWWikiArticle {
     private String title;
     private String url;
     private String articleAbstract;
+    private PorterStemmer stemmer;
+    private List<String> wordsList;
 
-    public GWWikiArticle(String title, String url, String articleAbstract){
+    public GWWikiArticle(String title, String url, String articleAbstract,
+                         PorterStemmer stemmer){
         this.title = title;
         this.url = url;
         this.articleAbstract = articleAbstract;
+        this.stemmer = stemmer;
+        wordsList = new LinkedList<String>();
+        if (stemmer != null) {
+            processContent();
+        }
     }
 
     public String getTitle() {
@@ -36,5 +49,24 @@ public class GWWikiArticle {
 
     public void setArticleAbstract(String articleAbstract) {
         this.articleAbstract = articleAbstract;
+    }
+
+    private void processContent () {
+        String[] wordsInTitle = title.split(" ");
+        for (String w : wordsInTitle) {
+            stemmer.setCurrent(w.toLowerCase());
+            stemmer.stem();
+            wordsList.add(stemmer.toString());
+        }
+        String[] wordsInAbstract = articleAbstract.split(" ");
+        for (String w : wordsInAbstract) {
+            stemmer.setCurrent(w.toLowerCase());
+            stemmer.stem();
+            wordsList.add(stemmer.toString());
+        }
+    }
+
+    public List<String> getWordsList() {
+        return this.wordsList;
     }
 }
