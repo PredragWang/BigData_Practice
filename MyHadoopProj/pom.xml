@@ -30,6 +30,11 @@
             <version>5.5.0</version>
         </dependency>
         <dependency>
+            <groupId>org.mongodb</groupId>
+            <artifactId>mongodb-driver</artifactId>
+            <version>3.0.0-rc0</version>
+        </dependency>
+        <dependency>
             <groupId>info.bliki.wiki</groupId>
             <artifactId>bliki-core</artifactId>
             <version>3.1.0</version>

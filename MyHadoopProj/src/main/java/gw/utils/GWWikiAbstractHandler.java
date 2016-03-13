@@ -1,5 +1,7 @@
 package gw.utils;
 
+import org.apache.hadoop.mapreduce.Mapper;
+import org.tartarus.snowball.ext.PorterStemmer;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -16,6 +18,8 @@ public class GWWikiAbstractHandler extends DefaultHandler {
     private String title = null;
     private String url = null;
     private String articleAbstract = null;
+    private PorterStemmer stemmer = new PorterStemmer();
+    private Mapper.Context context = null;
     public void startElement(String uri, String localName,
                              String qName, Attributes attributes)
             throws SAXException {
@@ -33,10 +37,13 @@ public class GWWikiAbstractHandler extends DefaultHandler {
             throws SAXException {
         if (qName.equals("doc")) {
             if (title != null && url != null && articleAbstract != null) {
-                doc = new GWWikiArticle(title, url, articleAbstract);
+                doc = new GWWikiArticle(title, url, articleAbstract, stemmer, true, context);
                 docs.add(doc);
             }
         }
+    }
+    public void setContext(Mapper.Context context) {
+        this.context = context;
     }
     public List<GWWikiArticle> getDocuments() {
         return this.docs;
