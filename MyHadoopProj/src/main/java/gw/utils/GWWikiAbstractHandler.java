@@ -13,13 +13,13 @@ import java.util.List;
  * Created by Guanyu on 3/10/16.
  */
 public class GWWikiAbstractHandler extends DefaultHandler {
-    private GWWikiArticle doc = null;
-    private List<GWWikiArticle> docs = new ArrayList<GWWikiArticle>();
+    private GWWikiArticle doc = new GWWikiArticle();
     private String title = null;
     private String url = null;
     private String articleAbstract = null;
     private PorterStemmer stemmer = new PorterStemmer();
     private Mapper.Context context = null;
+    private int id = 0;
     public void startElement(String uri, String localName,
                              String qName, Attributes attributes)
             throws SAXException {
@@ -37,15 +37,15 @@ public class GWWikiAbstractHandler extends DefaultHandler {
             throws SAXException {
         if (qName.equals("doc")) {
             if (title != null && url != null && articleAbstract != null) {
-                doc = new GWWikiArticle(title, url, articleAbstract, stemmer, true, context);
-                docs.add(doc);
+                doc.setId(id++);
+                doc.setTitle(title);
+                doc.setUrl(url);
+                doc.setArticleAbstract(articleAbstract);
+                doc.processContent(stemmer, context);
             }
         }
     }
     public void setContext(Mapper.Context context) {
         this.context = context;
-    }
-    public List<GWWikiArticle> getDocuments() {
-        return this.docs;
     }
 }

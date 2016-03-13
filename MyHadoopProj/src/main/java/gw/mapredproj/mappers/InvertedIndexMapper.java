@@ -24,6 +24,7 @@ public class InvertedIndexMapper
             SAXParserFactory factory = SAXParserFactory.newInstance();
             SAXParser saxParser = factory.newSAXParser();
             GWWikiAbstractHandler handler = new GWWikiAbstractHandler();
+            handler.setContext(context);
             saxParser.parse(new InputSource(new StringReader(value.toString())), handler);
         }catch (ParserConfigurationException e) {
             e.printStackTrace();
