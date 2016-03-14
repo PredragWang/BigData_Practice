@@ -2,13 +2,18 @@ package gw.mapredproj;
 
 import gw.mapredproj.mappers.InvertedIndexMapper;
 import gw.mapredproj.reducers.InvertedIndexReducer;
+import gw.utils.XmlInputFormat;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.ArrayWritable;
+import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.util.GenericOptionsParser;
+
 
 
 /**
@@ -23,10 +28,15 @@ public class InvertedIndex {
             System.err.println("Usage:  <in> <out>");
             System.exit(2);
         }
-        Job job = Job.getInstance(conf, "Friends Recommendation");
+        conf.set("xmlinput.start", "<doc>");
+        conf.set("xmlinput.end", "</doc>");
+        Job job = Job.getInstance(conf, "Inverted index");
+        job.setInputFormatClass(XmlInputFormat.class);
         job.setJarByClass(InvertedIndex.class);
         job.setMapperClass(InvertedIndexMapper.class);
         job.setReducerClass(InvertedIndexReducer.class);
+        job.setMapOutputKeyClass(Text.class);
+        job.setMapOutputValueClass(LongWritable.class);
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(Text.class);
 
