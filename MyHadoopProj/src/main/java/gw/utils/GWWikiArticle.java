@@ -6,8 +6,7 @@ import org.apache.hadoop.mapreduce.Mapper;
 import org.tartarus.snowball.ext.PorterStemmer;
 
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
+
 
 /**
  * Created by Guanyu on 3/10/16.
@@ -64,8 +63,8 @@ public class GWWikiArticle {
                 stemmer.setCurrent(w.toLowerCase());
                 stemmer.stem();
                 if (context != null) {
-                    t.set(stemmer.toString());
-                    context.write(t, new IntWritable(id));
+                    t.set(stemmer.getCurrent());
+                    context.write(t, iw);
                 }
             }
             String[] wordsInAbstract = articleAbstract.split(" ");
@@ -73,7 +72,8 @@ public class GWWikiArticle {
                 stemmer.setCurrent(w.toLowerCase());
                 stemmer.stem();
                 if (context != null) {
-
+                    t.set(stemmer.getCurrent());
+                    context.write(t, iw);
                 }
             }
         }catch (InterruptedException ie) {
