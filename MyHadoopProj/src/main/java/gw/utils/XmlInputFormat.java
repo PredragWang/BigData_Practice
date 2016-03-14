@@ -19,36 +19,33 @@ import org.apache.hadoop.mapreduce.RecordReader;
 import org.apache.hadoop.mapreduce.TaskAttemptContext;
 import org.apache.hadoop.mapreduce.lib.input.FileSplit;
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Reads records that are delimited by a specific begin/end tag.
  */
 public class XmlInputFormat extends TextInputFormat {
 
-    private static final Logger log = LoggerFactory.getLogger(XmlInputFormat.class);
-
-    public static final String START_TAG_KEY = "xmlinput.start";
-    public static final String END_TAG_KEY = "xmlinput.end";
+    public static final String SPLIT_TAG_KEY_CONF = "xmlsplit";
 
     @Override
     public RecordReader<LongWritable, Text> createRecordReader(InputSplit split, TaskAttemptContext context) {
         try {
             return new XmlRecordReader((FileSplit) split, context.getConfiguration());
         } catch (IOException ioe) {
-            log.warn("Error while creating XmlRecordReader", ioe);
             return null;
         }
     }
 
     /**
      * XMLRecordReader class to read through a given xml document to output xml blocks as records as specified
-     * by the start tag and end tag
+     * by the start tag and end tag.
+     * For example, in a wikipedia xml dump file, if set xmlsplit="page", then it outputs the xml blocks within
+     * a page
      *
      */
     public static class XmlRecordReader extends RecordReader<LongWritable, Text> {
-
+        private String startTagStr;
+        private String endTagStr;
         private final byte[] startTag;
         private final byte[] endTag;
         private final long start;
@@ -59,8 +56,11 @@ public class XmlInputFormat extends TextInputFormat {
         private Text currentValue;
 
         public XmlRecordReader(FileSplit split, Configuration conf) throws IOException {
-            startTag = conf.get(START_TAG_KEY).getBytes(Charsets.UTF_8);
-            endTag = conf.get(END_TAG_KEY).getBytes(Charsets.UTF_8);
+            String split_tag = conf.get(SPLIT_TAG_KEY_CONF);
+            startTagStr = "<" + split_tag + ">";
+            endTagStr = "</" + split_tag + ">";
+            startTag =startTagStr.getBytes(Charsets.UTF_8);
+            endTag = endTagStr.getBytes(Charsets.UTF_8);
 
             // open the file and seek to the start of the split
             start = split.getStart();

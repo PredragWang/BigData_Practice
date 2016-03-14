@@ -12,6 +12,7 @@ import javax.xml.stream.XMLStreamReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
+
 /**
  * Created by Guanyu on 3/9/16.
  */
@@ -23,9 +24,9 @@ public class InvertedIndexMapper
     public void map(LongWritable key, Text value, Mapper.Context context)
             throws IOException, InterruptedException {
         String document = value.toString();
-        String docTitle = null;
-        String docURL = null;
-        String docAbstract = null;
+        String docTitle = "";
+        String docURL = "";
+        String docAbstract = "";
         String currentElement = "";
         try {
             XMLStreamReader reader =
@@ -40,29 +41,12 @@ public class InvertedIndexMapper
                         break;
                     case XMLStreamConstants.CHARACTERS:
                         if (currentElement.equalsIgnoreCase("title")) {
-                            docTitle = reader.getText().trim();
-                            if (docTitle != null) {
-                                String[] wordsInTitle = docTitle.split(" ");
-                                for (String w : wordsInTitle) {
-                                    stemmer.setCurrent(w.toLowerCase());
-                                    stemmer.stem();
-                                    t.set(stemmer.getCurrent());
-                                    context.write(t, key);
-                                }
-                            }
+                            docTitle += reader.getText().trim();
+
                         } else if (currentElement.equalsIgnoreCase("url")) {
-                            docURL = reader.getText().trim();
+                            docURL += reader.getText().trim();
                         } else if (currentElement.equalsIgnoreCase("abstract")) {
-                            docAbstract = reader.getText().trim();
-                            if (docAbstract != null) {
-                                String[] wordsInAbstract = docAbstract.split(" ");
-                                for (String w : wordsInAbstract) {
-                                    stemmer.setCurrent(w.toLowerCase());
-                                    stemmer.stem();
-                                    t.set(stemmer.getCurrent());
-                                    context.write(t, key);
-                                }
-                            }
+                            docAbstract += reader.getText().trim();
                         }
                         break;
                 }
@@ -70,6 +54,25 @@ public class InvertedIndexMapper
             reader.close();
         }catch (XMLStreamException xe) {
             xe.printStackTrace();
+        }
+        if (docTitle.length() > 0) {
+            String[] wordsInTitle = docTitle.split(" ");
+            for (String w : wordsInTitle) {
+                stemmer.setCurrent(w.toLowerCase());
+                stemmer.stem();
+                t.set(stemmer.getCurrent());
+                context.write(t, key);
+            }
+        }
+        if (docAbstract.length() > 0) {
+            String[] wordsInAbstract = docAbstract.split(" ");
+            for (String w : wordsInAbstract) {
+
+                stemmer.setCurrent(w.toLowerCase());
+                stemmer.stem();
+                t.set(stemmer.getCurrent());
+                context.write(t, key);
+            }
         }
     }
 }
