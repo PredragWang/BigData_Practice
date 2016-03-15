@@ -26,8 +26,7 @@ public class InvertedIndex {
             System.err.println("Usage:  <in> <out>");
             System.exit(2);
         }
-        conf.set("xmlinput.start", "<doc>");
-        conf.set("xmlinput.end", "</doc>");
+        conf.set("xmlsplit", "doc");
         Job job = Job.getInstance(conf, "Inverted index");
         job.setInputFormatClass(XmlInputFormat.class);
         job.setJarByClass(InvertedIndex.class);

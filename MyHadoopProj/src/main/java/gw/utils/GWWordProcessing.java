@@ -1,12 +1,17 @@
 package gw.utils;
 
+import com.google.common.collect.Sets;
+import org.tartarus.snowball.ext.PorterStemmer;
+
 import java.util.HashSet;
 
 /**
- * Created by Guanyu on 3/11/16.
+ * Created by Guanyu on 3/15/16.
  */
-public class GWStopWords {
-    public static String[] STOP_WORDS = {
+public class GWWordProcessing {
+    private PorterStemmer stemmer = new PorterStemmer();
+    private StringBuilder newWord = null;
+    public static HashSet<String> STOP_WORDS = Sets.newHashSet(
             "a",
             "about",
             "above",
@@ -424,16 +429,32 @@ public class GWStopWords {
             "your",
             "yours",
             "yourself",
-            "yourselves",};
-    private HashSet<String> stopWordsSet =  new HashSet<String>();
+            "yourselves");
 
-    public GWStopWords() {
-        for (String word : STOP_WORDS) {
-            stopWordsSet.add(word);
+    public String processWord(String word) {
+        if (word == null || word.length() == 0) return null;
+        /* first remove the starting and ending
+         non-alphabetical and non-numeric characters
+         */
+        int start = 0, end = word.length()-1;
+        while (start < word.length()) {
+            if (Character.isLetterOrDigit(word.charAt(start))) break;
+            start ++;
         }
+        while (end >= 0) {
+            if (Character.isLetterOrDigit(word.charAt(end))) break;
+            end --;
+        }
+        if (start > end) return null;
+        newWord = new StringBuilder();
+        while (start <= end) {
+            newWord.append(Character.toLowerCase(word.charAt(start++)));
+        }
+        if (STOP_WORDS.contains(newWord.toString())) return null;
+        stemmer.setCurrent(newWord.toString());
+        stemmer.stem();
+        return stemmer.getCurrent();
     }
 
-    public boolean isAStopWord(String word) {
-        return stopWordsSet.contains(word);
-    }
+
 }

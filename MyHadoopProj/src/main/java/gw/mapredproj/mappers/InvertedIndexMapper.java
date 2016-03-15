@@ -1,9 +1,9 @@
 package gw.mapredproj.mappers;
 
+import gw.utils.GWWordProcessing;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
-import org.tartarus.snowball.ext.PorterStemmer;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
@@ -18,8 +18,8 @@ import java.io.IOException;
  */
 public class InvertedIndexMapper
         extends Mapper<LongWritable, Text, Text, LongWritable> {
-    private PorterStemmer stemmer = new PorterStemmer();
     private Text t = new Text();
+    private GWWordProcessing wp = new GWWordProcessing();
     @Override
     public void map(LongWritable key, Text value, Mapper.Context context)
             throws IOException, InterruptedException {
@@ -55,23 +55,27 @@ public class InvertedIndexMapper
         }catch (XMLStreamException xe) {
             xe.printStackTrace();
         }
+
         if (docTitle.length() > 0) {
             String[] wordsInTitle = docTitle.split(" ");
             for (String w : wordsInTitle) {
-                stemmer.setCurrent(w.toLowerCase());
-                stemmer.stem();
-                t.set(stemmer.getCurrent());
-                context.write(t, key);
+                //t.set(w);
+                //context.write(t, key);
+                if ((w = wp.processWord(w)) != null) {
+                    t.set(w);
+                    context.write(t, key);
+                }
             }
         }
         if (docAbstract.length() > 0) {
             String[] wordsInAbstract = docAbstract.split(" ");
             for (String w : wordsInAbstract) {
-
-                stemmer.setCurrent(w.toLowerCase());
-                stemmer.stem();
-                t.set(stemmer.getCurrent());
-                context.write(t, key);
+                //t.set(w);
+                //context.write(t, key);
+                if ((w = wp.processWord(w)) != null) {
+                    t.set(w);
+                    context.write(t, key);
+                }
             }
         }
     }
