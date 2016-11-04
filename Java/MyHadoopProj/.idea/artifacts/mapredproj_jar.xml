@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="mapredproj:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/mapredproj_jar</output-path>
+    <root id="archive" name="mapredproj.jar">
+      <element id="module-output" name="mapredproj" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/apache/lucene/lucene-analyzers-common/5.5.0/lucene-analyzers-common-5.5.0.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
