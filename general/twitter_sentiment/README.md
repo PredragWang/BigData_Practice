@@ -1,24 +1,7 @@
 <html>
 <head>
 <title>Assignment 1: Twitter Sentiment Analysis in Python</title>
-<style>
-.turnin {
-color:red;
-font-size:120%;
-}
-.important {
-color:purple;
-}
-p {
-padding-bottom:0.25em;
-}
-h3 {
-padding-top:2em;
-}
-h4 {
-padding-top:1em;
-}
-</style>
+
 </head>
 
 <body>
