@@ -1,3 +1,3 @@
-# hadoop_cases
+# Hands-on coding Practice on Big Data
 -------------------------------------------------------------
-Hadoop data processing cases written in Java and Python
+Simple data processing practice using Hadoop, Spark, etc.
