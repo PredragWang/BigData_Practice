@@ -1,12 +1,15 @@
-Playlist Processor
-Usage: playlist.py <input json file> <change json file> <output json file>
+# Playlist Processor
+## Usage
+playlist.py input_json_file change_file output_json_file
 
-Change json file format
+## Change file
+Format: JSON
+```json
 {
   "changes" : [
     {
-      "operation": // operation type - "AddOrPatch" or delete,
-      "details": { // same format as playlist definition
+      "operation": "// operation type - AddOrPatch or Delete"
+      "details": { "// same format as playlist definition"
         "id" : "4",
         "user_id" : "7",
         "song_ids" : [
@@ -20,8 +23,9 @@ Change json file format
   ...... more changes ......
   ]
 }
-
-Handling large input file
+```
+## Scalability
+### Handling large input file
 For large json file, we can not load it into memory and need to process the file stream by stream. Here are the details
 1. Process objects from input file
 In this case, we need to keep a stack to keep track of the object in the current level.
@@ -32,5 +36,5 @@ Instead of persisting the playlist data in the memory, we write the playlists in
 We also need to persist an index file mapping playlist id to the line number of the playlist in the file above for fast querying.
 For deleted playlists, we don't remove it from the file. Instead we mark it as removed. Either in the index file or data file is fine.
 
-Handling large change file
+### Handling large change file
 For large change file, we also need to process the file stream by stream. Strategy is same as the large input file(using stack). The only difference is we don't need to store the changes.
