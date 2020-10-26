@@ -1,0 +1,36 @@
+{
+  "changes" : [
+    {
+      "operation": "AddOrPatch",
+      "details": {
+        "id" : "4",
+        "user_id" : "7",
+        "song_ids" : [
+            "8",
+            "32",
+            "15",
+            "16"
+        ]
+      }
+    },
+    {
+      "operation": "AddOrPatch",
+      "details": {
+        "id" : "4",
+        "user_id" : "7",
+        "song_ids" : [
+            "8",
+            "32",
+            "15",
+            "16"
+        ]
+      }
+    },
+    {
+      "operation": "Delete",
+      "details": {
+        "id" : "23"
+      }
+    }
+  ]
+}
